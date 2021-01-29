@@ -35,7 +35,6 @@ public class BST {
             else
                 addNode(k,p.right);
         }
-
     }
 
     //DELETE NODE METHOD
@@ -95,13 +94,8 @@ public class BST {
     //METHOD TO FIND HEIGHT
 
     static int height(node p){
-        if(p==null){
-            return 0;
-        }
-        if(height(p.left)>height(p.right))
-        return height(p.left)+1;
-        else
-        return height(p.right)+1;
+        if(p==null) return 0;
+        return 1+Math.max(height(p.left), height(p.right));
     }
 
     //PRE-ORDER TRAVERSAL
@@ -161,25 +155,155 @@ public class BST {
             if(temp.right!=null)
             q.add(temp.right);
         }
+    }
+
+    static int max_level=0;
+
+    static void leftView(node n){
+        Queue<node> q = new LinkedList<node>();
+        q.add(n);
+        while (!q.isEmpty()) {
+            // q.add(n.left);
+            int size=q.size();
+            for(int i=0;i<size;i++){
+                node temp=q.remove();
+                if(i==0)
+                System.out.println(temp.data);
+                if(temp.left!=null)
+                q.add(temp.left);
+                if(temp.right!=null)
+                q.add(temp.right);
+            }
+        }
+    }
+
+    static void leftViewRecursive(node n,int level){
+        if(n==null) return;
+        if(max_level<level){
+            System.out.println(n.data);
+            max_level = level;
+        }
+        leftViewRecursive(n.left,level+1);
+        leftViewRecursive(n.right,level+1);
 
     }
 
+    static void rightView(node n){
+        Queue<node> q = new LinkedList<node>();
+        q.add(n);
+        while(!q.isEmpty()){
+            int size=q.size();
+            for(int i=0;i<size;i++){
+                node temp=q.remove();
+                if(i==size-1)
+                System.out.println(temp.data);
+                if(temp.left!=null)
+                q.add(temp.left);
+                if(temp.right!=null)
+                q.add(temp.right);
+            }
+        }
+    }
+
+    static void rightViewRecursive(node n,int level) {
+        if(n==null) return;
+        if(max_level<level) {
+            System.out.println(n.data);
+            max_level=level;
+        }
+        rightViewRecursive(n.right,level+1);
+        rightViewRecursive(n.left,level+1);
+    }
+
+    static Map<Integer, Integer> topmap=new TreeMap<Integer, Integer>();
+    static void topView(node n,int level){
+        if(n==null) return;
+        if(!topmap.containsKey(level))
+        topmap.put(level,n.data);
+        if(n.left!=null&&!(topmap.containsKey(level-1)))
+        topmap.put(level-1,n.left.data);
+        if(n.right!=null&&!(topmap.containsKey(level+1)))
+        topmap.put(level+1,n.right.data);
+        topView(n.left,level-1);
+        topView(n.right,level+1);
+    }
+
+    static Map<Integer, Integer> bottommap = new TreeMap<Integer, Integer>();
+    static void bottomView(node n,int level){
+        if(n==null) return;
+        bottommap.put(level,n.data);
+        if(n.left!=null)
+        bottommap.put(level-1,n.left.data);
+        if(n.right!=null)
+        bottommap.put(level+1,n.right.data);
+        bottomView(n.right,level+1);
+        bottomView(n.left,level-1);
+    }
+
+    static Map<Integer,Integer> inpre= new TreeMap<Integer,Integer>();
+    static int pre_ind=0;
+    static node treeFromInPre(int[] pre,int start,int end){
+        if(start>end) return null;
+        node root = new node(pre[pre_ind]);
+        int ind=inpre.get(pre[pre_ind]);
+        pre_ind++;
+        root.left = treeFromInPre(pre,start,ind-1);
+        root.right = treeFromInPre(pre,ind+1,end);
+        return root;
+    }
+
+    static int prepost=0;
+    static node treeFromPrePost(int[] pre,int[] post,int l,int h,int size){
+        if(prepost>=size||l>h)
+        return null;
+        node root=new node(pre[prepost]);
+        prepost++;
+        if(l==h||prepost>=size)
+        return root;
+        int i;
+        for(i=l;i<=h;i++){
+            if(post[i]==pre[prepost])
+            break;
+        }
+        if(i<=h){
+            root.left=treeFromPrePost(pre,post,l,i,size);
+            root.right=treeFromPrePost(pre,post,i+1,h,size);
+        }
+        return root;
+    }
+
+    static Map<Integer, Integer> inpost = new TreeMap<Integer, Integer>();
+    static int post_ind = 0;
+    static node treeFromInPost(int[] post, int start, int end){
+        if(start>end) return null;
+        node root = new node(post[post_ind]);
+        int ind=inpost.get(post[post_ind]);
+        post_ind--;
+        root.right = treeFromInPost(post,ind+1,end);
+        root.left = treeFromInPost(post,start,ind-1);
+        return root;
+    }
+
     public static void main(String[] args) {
-        addNode(50,root);
-        addNode(60,root);
         addNode(40,root);
         addNode(30,root);
-        addNode(33,root);
         addNode(20,root);
-        addNode(45,root);
-        addNode(43,root);
-        addNode(48,root);
-        addNode(55,root);
-        addNode(53,root);
-        addNode(57,root);
-        addNode(65,root);
-        addNode(70,root);
-        addNode(63,root);
-        inOrder(root);
+        addNode(10,root);
+        addNode(50,root);
+        addNode(60,root);
+
+        
+        int[] inorder = new int[]{10,20,30,40,50,60};
+        int[] preorder = new int[]{40,30,20,10,50,60};
+        int[] postorder = new int[]{10,20,30,60,50,40};
+        for(int i=0;i<inorder.length;i++){
+            inpre.put(inorder[i],i);
+            inpost.put(inorder[i],i);
+        }
+        post_ind=postorder.length-1;
+        node treefrominpost=treeFromInPost(postorder,0,postorder.length-1);
+        node treefrominpre=treeFromInPre(preorder,0,preorder.length-1);
+        node treefromprepost=treeFromPrePost(preorder,postorder,0,preorder.length-1,preorder.length);
+        inOrder(treefromprepost);
     }
 }
