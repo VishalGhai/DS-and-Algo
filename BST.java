@@ -284,13 +284,50 @@ public class BST {
         return root;
     }
 
+
+    //MAXIMUM DIAMETER OF IN THE TREE
+    static int max_diameter=Integer.MIN_VALUE;
+    static int MaxDiameter(node root){
+        if(root==null) return 0;
+        int l=MaxDiameter(root.left);
+        int r=MaxDiameter(root.right);
+        int temp=Math.max(l,r)+1;
+        int ans=Math.max(temp,l+r+1);
+        max_diameter=Math.max(max_diameter,ans);
+        return temp;
+    }
+
+    //MAXIMUM SUM PATH IN THE TREE
+    static int max_path_sum=Integer.MIN_VALUE;
+    static int MaxPathSum(node root){
+        if(root==null) return 0;
+        int l=MaxPathSum(root.left);
+        int r=MaxPathSum(root.right);
+        int temp=Math.max(Math.max(l,r)+root.data,root.data);
+        int ans=Math.max(temp,l+r+root.data);
+        max_path_sum=Math.max(max_path_sum,ans);
+        return temp;
+    }
+
+    //MAXIMUM SUM PATH OF THE TREE FROM ONE LEAF NODE TO ANOTHER
+    static int max_path_sum_from_leaf_to_leaf=Integer.MIN_VALUE;
+    static int MaxPathSumFromLeafToLeaf(node root){
+        if(root==null) return 0;
+        int l=MaxPathSum(root.left);
+        int r=MaxPathSum(root.right);
+        int temp=Math.max(l,r)+root.data;
+        if(root.left==null&&root.right==null) temp=Math.max(temp,root.data);
+        int ans=Math.max(temp,l+r+root.data);
+        max_path_sum_from_leaf_to_leaf=Math.max(max_path_sum_from_leaf_to_leaf,ans);
+        return ans;
+    }
     public static void main(String[] args) {
-        addNode(40,root);
+        addNode(-40,root);
         addNode(30,root);
         addNode(20,root);
-        addNode(10,root);
+        addNode(-10,root);
         addNode(50,root);
-        addNode(60,root);
+        addNode(-60,root);
 
         
         int[] inorder = new int[]{10,20,30,40,50,60};
@@ -304,6 +341,12 @@ public class BST {
         node treefrominpost=treeFromInPost(postorder,0,postorder.length-1);
         node treefrominpre=treeFromInPre(preorder,0,preorder.length-1);
         node treefromprepost=treeFromPrePost(preorder,postorder,0,preorder.length-1,preorder.length);
-        inOrder(treefromprepost);
+        inOrder(root);
+        MaxDiameter(root);
+        System.out.println(max_diameter);
+        MaxPathSum(root);
+        System.out.println(max_path_sum);
+        MaxPathSumFromLeafToLeaf(root);
+        System.out.println(max_path_sum_from_leaf_to_leaf);
     }
 }
