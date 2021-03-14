@@ -148,6 +148,10 @@ public class TypeConversions {
         double binarytofloat=Double.longBitsToDouble(Long.parseLong(floattobinary,2));
         System.out.println("binarytofloat : "+binarytofloat);
 
+        //BINARY STRING TO INT
+        int binarytoint=Integer.parseInt("10010011",2);   //147
+        System.out.println("binarytoint : "+binarytoint);
+
         //================================================================
         //CHAR CONVERSIONS
         //================================================================
