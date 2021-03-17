@@ -64,8 +64,7 @@
 		"scope": "java",
 		"prefix": "read-int",
 		"body": [
-			"${1:s}=br.readLine();",
-			"int ${2:n}=Integer.parseInt($1);"
+			"int ${2:n}=Integer.parseInt(br.readLine());"
 		],
 		"description": "Int Read Statement"
 	},
@@ -175,7 +174,7 @@
 	},
 	"ArrayList 2d": {
 		"scope": "java",
-		"prefix": "alisttwod",
+		"prefix": "a-list-two-d",
 		"body": [
 			"ArrayList<ArrayList<${1:Integer}>> ${2:list} = new ArrayList<ArrayList<$1>>();"
 		],
@@ -183,7 +182,7 @@
 	},
 	"ArrayList 1d": {
 		"scope": "java",
-		"prefix": "alistoned",
+		"prefix": "a-list-one-d",
 		"body": [
 			"ArrayList<${1:Integer}> ${2:list} = new ArrayList<$1>();"
 		],
