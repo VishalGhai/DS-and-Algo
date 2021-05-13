@@ -30,12 +30,14 @@ class AVLTree {
         return height(n.left) - height(n.right);
     }
 
-    // ROTATE THE NODES TO THE LEFT
-    //         x                   y
-    //        /                   / \ 
-    //       y         ==>       z   x 
-    //      / \                     /
-    //     z   a                   a
+    
+    
+        // ROTATE THE NODES TO THE LEFT
+        //         x                     y
+        //         \                    / \ 
+        //          y         ==>      x   z 
+        //        / \                   \
+        //       a   z                   a
 
     node leftRotate(node x) {
         node y = x.right;
@@ -46,13 +48,13 @@ class AVLTree {
         y.height = Math.max(height(y.left), height(y.right))+1;
         return y;
     }
-
     // ROTATE THE NODES TO THE RIGHT
-    //         x                     y
-    //         \                    / \ 
-    //          y         ==>      x   z 
-    //        / \                   \
-    //       a   z                   a
+    //         x                   y
+    //        /                   / \ 
+    //       y         ==>       z   x 
+    //      / \                     /
+    //     z   a                   a
+
     node rightRotate(node x) {
         node y = x.left;
         node temp = y.right;
