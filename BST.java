@@ -228,6 +228,38 @@ public class BST {
         topView(n.right,level+1);
     }
 
+    // Vertical Order View of the Tree
+    static void VerticalView(node n){
+        Queue<node> q = new LinkedList<node>();
+        HashMap<node,Integer> verticalDistances = new HashMap<node,Integer>();
+        Map<Integer,ArrayList<node>> m = new TreeMap<Integer,ArrayList<node>>();
+        q.add(n);
+        verticalDistances.put(n,0);
+        m.put(verticalDistances.get(n),new ArrayList<node>());
+        m.get(verticalDistances.get(n)).add(n);
+        while(!q.isEmpty()){
+            node temp=q.poll();
+            if(temp.left!=null){
+                q.add(temp.left);
+                verticalDistances.put(temp.left,verticalDistances.get(temp)-1);
+                if(!m.containsKey(verticalDistances.get(temp.left))) m.put(verticalDistances.get(temp.left),new ArrayList<node>());
+                m.get(verticalDistances.get(temp.left)).add(temp.left);
+            }
+            if(temp.right!=null){
+                q.add(temp.right);
+                verticalDistances.put(temp.right,verticalDistances.get(temp)+1);
+                if(!m.containsKey(verticalDistances.get(temp.right))) m.put(verticalDistances.get(temp.right),new ArrayList<node>());
+                m.get(verticalDistances.get(temp.right)).add(temp.right);
+            }
+        }
+        for(int key:m.keySet()){
+            for(node k:m.get(key)){
+                System.out.print(k.data+" ");
+            }
+            System.out.println();
+        }
+    }
+
     static Map<Integer, Integer> bottommap = new TreeMap<Integer, Integer>();
     static void bottomView(node n,int level){
         if(n==null) return;
@@ -333,20 +365,35 @@ public class BST {
         int[] inorder = new int[]{10,20,30,40,50,60};
         int[] preorder = new int[]{40,30,20,10,50,60};
         int[] postorder = new int[]{10,20,30,60,50,40};
+        
         for(int i=0;i<inorder.length;i++){
             inpre.put(inorder[i],i);
             inpost.put(inorder[i],i);
         }
+        
         post_ind=postorder.length-1;
+        
         node treefrominpost=treeFromInPost(postorder,0,postorder.length-1);
         node treefrominpre=treeFromInPre(preorder,0,preorder.length-1);
         node treefromprepost=treeFromPrePost(preorder,postorder,0,preorder.length-1,preorder.length);
+        
+        // Inorder traversal of the tree
         inOrder(root);
+
+        // Maximum diameter in the tree
         MaxDiameter(root);
         System.out.println(max_diameter);
+        
+        // maximum sum path in the tree
         MaxPathSum(root);
         System.out.println(max_path_sum);
+        
+        // max sum path from one leaf to another leaf only.
         MaxPathSumFromLeafToLeaf(root);
         System.out.println(max_path_sum_from_leaf_to_leaf);
+        
+        // Vertical order view of the tree
+        System.out.println("vertical view : ");
+        VerticalView(root);
     }
 }
